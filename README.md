@@ -25,7 +25,9 @@ Use the `--help` command to find more about the thresholds and more details abou
 
 ## Examples
 `python3 main.py --input test.mp4 --method pixel-wise --threshold 10`
+
 `python3 main.py -i test.mp4 -m orb -t 25`
+
 `python3 main.py --help`
 ___
 # Output
