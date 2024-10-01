@@ -37,5 +37,6 @@ ___
 Note that for larger videos, with higher threshold tolerance, and low memory capacity, the program could run out of memory and result in halting the script.
 ___
 # Future features
-1. Implement yt-dl library in the project (to work with online videos).
-2. Create a GUI for the project.
+1. Better memory handling (capture/relese mechanism).  
+2. Implement yt-dl library in the project (to work with online videos).
+3. Create a GUI for the project.
