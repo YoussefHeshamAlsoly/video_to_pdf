@@ -7,7 +7,8 @@ from reportlab.lib.pagesizes import letter
 from util.progress_bar import progress_bar
 import threading
 
-# Function to save frames as images
+
+# Function to save frames as images using threading
 def save_frames_as_images(method, frames):
     if not frames:
         print("No frames to export.")
@@ -23,17 +24,67 @@ def save_frames_as_images(method, frames):
     image_paths = []
     print(f"Saving extracted frames to folder '{os.path.abspath(original_frames_folder)}'")
     
-    for i, frame in enumerate(frames):
+    # Get the number of available threads and limit to a quarter
+    max_threads = max(1, os.cpu_count() // 4)  # Ensure at least one thread is used
+    
+    def save_frame(i, frame):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        image_path = os.path.join(original_frames_folder, f"frame_{i}.png")
+        image_path = os.path.join(original_frames_folder, f"frame_{i}.jpeg")
         Image.fromarray(rgb_frame).save(image_path)
         image_paths.append(image_path)
         progress_bar(len(image_paths), len(frames))
+
+    # Create and start threads for saving frames
+    threads = []
+    for i, frame in enumerate(frames):
+        thread = threading.Thread(target=save_frame, args=(i, frame))
+        threads.append(thread)
+        thread.start()
+
+        # Limit the number of concurrent threads
+        if len(threads) >= max_threads:
+            for thread in threads:
+                thread.join()
+            threads = []
+    
+    # Ensure all threads complete
+    for thread in threads:
+        thread.join()
 
     # Ensure the progress bar reaches 100%
     progress_bar(len(frames), len(frames))
 
     return image_paths, current_time
+
+
+
+# # Function to save frames as images
+# def save_frames_as_images(method, frames):
+#     if not frames:
+#         print("No frames to export.")
+#         return [], ""
+    
+#     current_time = datetime.datetime.now().strftime("%d.%m.%Y__%H.%M.%S")
+    
+#     # Folder to store frames (for manual processing/backup if needed)
+#     original_frames_folder = f"Extracted_Frames_{method}_{current_time}"
+#     if not os.path.exists(original_frames_folder):
+#         os.makedirs(original_frames_folder)
+
+#     image_paths = []
+#     print(f"Saving extracted frames to folder '{os.path.abspath(original_frames_folder)}'")
+    
+#     for i, frame in enumerate(frames):
+#         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#         image_path = os.path.join(original_frames_folder, f"frame_{i}.png")
+#         Image.fromarray(rgb_frame).save(image_path)
+#         image_paths.append(image_path)
+#         progress_bar(len(image_paths), len(frames))
+
+#     # Ensure the progress bar reaches 100%
+#     progress_bar(len(frames), len(frames))
+
+#     return image_paths, current_time
 
 # Function to combine images into a PDF with threading
 def combine_images_to_pdf(method, image_paths, current_time):

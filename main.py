@@ -51,6 +51,16 @@ def main(input, method, threshold):
     process_video(method, video_path, comparison_method, threshold)
 
 
+def frame_generator(video_path):
+    cap = cv2.VideoCapture(video_path)
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        yield frame
+    cap.release()
+
+
 def process_video(method, video_path, comparison_method, threshold):
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
@@ -64,7 +74,16 @@ def process_video(method, video_path, comparison_method, threshold):
     different_frames = [prev_frame]  # List to hold frames that are different
     current_frame_count = 0  # Track how many frames processed (for progress bar)
 
-    while cap.isOpened():
+    # Create a frame generator from the video
+    frames = frame_generator(video_path)
+    
+    # List to hold different frames
+    different_frames = []
+
+
+    # while cap.isOpened():
+    for current_frame in frames:
+
         ret, current_frame = cap.read()
         if not ret:
             break
