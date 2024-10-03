@@ -9,10 +9,11 @@ The main idea of the project is to detect when frames change in a video (indicat
 
 The project uses 4 comparison techniques of analyzing the frames to determine change of scenes or not, those techniques are:
 
-1. Pixel-wise comparison
-2. Histogram comparison
-3. SSIM comparison
-4. ORB comparison
+1. Fixed-interval slicing (not a comparison method, rather saving frames with a fixed interval between every consecutive frames)
+2. Pixel-wise comparison
+3. Histogram comparison
+4. SSIM comparison
+5. ORB comparison
 
 ___
 
@@ -23,10 +24,11 @@ This is a CLI project, it needs an input file, choosing a comparison method, and
 
 The methods are:
 
-1. `pixel-wise`
-2. `hist`
-3. `ssim`
-4. `orb`
+1. `fixed-interval`
+2. `pixel-wise`
+3. `hist`
+4. `ssim`
+5. `orb`
 
 Use the `--help` command to find more about the thresholds and more details about other parameters
 `python3 main.py --help`
@@ -57,6 +59,6 @@ ___
 ## Todo
 
 - [x] Better memory handling (capture/release mechanism).
-- [ ] Add a method to extract frames with fixed interval (e.g. a frame every 2000 ms)
+- [x] Add a method to extract frames with fixed interval (e.g. a frame every 2000 ms)
 - [ ] Implement yt-dl library in the project (to work with online videos).
 - [ ] Create a GUI for the project.
