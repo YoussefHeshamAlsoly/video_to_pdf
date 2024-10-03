@@ -57,5 +57,6 @@ ___
 ## Todo
 
 - [x] Better memory handling (capture/release mechanism).
+- [ ] Add a method to extract frames with fixed interval (e.g. a frame every 2000 ms)
 - [ ] Implement yt-dl library in the project (to work with online videos).
 - [ ] Create a GUI for the project.
