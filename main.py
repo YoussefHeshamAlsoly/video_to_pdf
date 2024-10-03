@@ -1,10 +1,10 @@
 import cv2
 import click
-# from frames_to_pdf import frames_to_pdf
 from frames_to_pdf import *
 from util.progress_bar import progress_bar
 
 from comparison_functions import (
+    fixed_interval,
     frame_difference,
     histogram_difference,
     ssim_difference,
@@ -20,7 +20,7 @@ from comparison_functions import (
 
 @click.option('-m',
                 '--method',
-                type=click.Choice(['pixel-wise', 'hist', 'ssim', 'mse', 'orb'], case_sensitive=False),
+                type=click.Choice(['fixed-interval','pixel-wise', 'hist', 'ssim', 'mse', 'orb'], case_sensitive=False),
                 default='pixel-wise',
                 help='Available frame comparison methods to use.')
 
@@ -28,6 +28,7 @@ from comparison_functions import (
                 '--threshold',
                 default='10.0',
                 help='Threshold pixel difference (default: 10.0). Suggested thresholds\
+                    \n\fixed-interval (int): Capture frames in a fixed interval (e.g. every 3 seconds)\
                     \n\npixel-wise (int): 10\
                     \n\nhist (float): 0.9 (if pixel similarity < 90% then different pixels).\
                     \n\nssim (float): 0.9 (if pixel similarity far from 1 then different pixels).\
@@ -39,6 +40,7 @@ def main(input, method, threshold):
     threshold = float(threshold)
 
     methods = {
+        'fixed-interval': (fixed_interval, "fixed-interval"),
         'pixel-wise': (frame_difference, "Pixel-wise Difference"),
         'hist': (histogram_difference, "Histogram Comparison"),
         'ssim': (ssim_difference, "SSIM"),
@@ -61,8 +63,14 @@ def frame_generator(video_path):
     cap.release()
 
 
+def process_frame():
+    pass
+
+
 def process_video(method, video_path, comparison_method, threshold):
     cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)  # Frames per second
+    
     if not cap.isOpened():
         print("Error opening video file")
         return
@@ -77,58 +85,71 @@ def process_video(method, video_path, comparison_method, threshold):
     # Create a frame generator from the video
     frames = frame_generator(video_path)
     
-    # List to hold different frames
     different_frames = []
 
 
-    # while cap.isOpened():
-    for current_frame in frames:
-
-        ret, current_frame = cap.read()
-        if not ret:
-            break
-
-        if comparison_method == frame_difference:
-            threshold = int(threshold)
+    if comparison_method == frame_difference:
+        threshold = int(threshold)
+        for current_frame in frames:
             difference_value = comparison_method(prev_frame, current_frame, threshold=threshold)
             if difference_value > threshold:
                 different_frames.append(current_frame)
+            prev_frame = current_frame
+            current_frame_count += 1
+            progress_bar(current_frame_count, total_frames)
+    
+    elif comparison_method == fixed_interval:
+        different_frames = comparison_method(cap, fps, threshold, total_frames)
+
+    
+    else:
         
-        else:
-            difference_value = comparison_method(prev_frame, current_frame)
-            
-            if comparison_method == ssim_difference:
-                f_threshold = threshold or 0.9
+        if comparison_method == ssim_difference:
+            f_threshold = threshold or 0.9
+            for current_frame in frames:
+                difference_value = comparison_method(prev_frame, current_frame)
                 if difference_value < f_threshold:  # SSIM values close to 1 indicate similar frames
                     different_frames.append(current_frame)
-            
-            elif comparison_method == histogram_difference:
-                f_threshold = threshold or 0.9
+                prev_frame = current_frame
+                current_frame_count += 1
+                progress_bar(current_frame_count, total_frames)
+        
+        elif comparison_method == histogram_difference:
+            f_threshold = threshold or 0.9
+            for current_frame in frames:
+                difference_value = comparison_method(prev_frame, current_frame)
                 if difference_value < f_threshold:  # Lower histogram correlation indicates more difference
                     different_frames.append(current_frame)
-            
-            elif comparison_method == mse_difference:
-                f_threshold = threshold or 500
+                prev_frame = current_frame
+                current_frame_count += 1
+                progress_bar(current_frame_count, total_frames)
+        
+        elif comparison_method == mse_difference:
+            f_threshold = threshold or 500
+            for current_frame in frames:
+                difference_value = comparison_method(prev_frame, current_frame)
                 if difference_value > f_threshold:  # Adjust based on your observations
                     different_frames.append(current_frame)
-            
-            elif comparison_method == orb:
-                f_threshold = threshold or 10
+                prev_frame = current_frame
+                current_frame_count += 1
+                progress_bar(current_frame_count, total_frames)
+        
+        elif comparison_method == orb:
+            f_threshold = threshold or 10
+            for current_frame in frames:
+                difference_value = comparison_method(prev_frame, current_frame)
                 if difference_value < f_threshold:  # Adjust based on the expected number of matches
                     different_frames.append(current_frame)
-
-        prev_frame = current_frame
-
-        current_frame_count += 1
-        progress_bar(current_frame_count, total_frames)
+                prev_frame = current_frame
+                current_frame_count += 1
+                progress_bar(current_frame_count, total_frames)
 
     cap.release()
     progress_bar(total_frames, total_frames)
     print("\nProcessing complete.")
     print(f"Detected {len(different_frames)} different frames.")
 
-    # call frames_to_pdf to save different_frames into a PDF
-    # frames_to_pdf(method, different_frames)
+
     images, currrent_time = save_frames_as_images(method, different_frames)
     combine_images_to_pdf(method, images, currrent_time)
 

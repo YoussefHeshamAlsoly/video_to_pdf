@@ -1,9 +1,27 @@
 import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
+from util.progress_bar import progress_bar
 
 
 # Define comparison methods
+def fixed_interval(video_capture, fps, interval, total_frames):
+    capture_index_val = int(fps * interval)
+    captured_frames = []
+
+    for i in range(0, total_frames, capture_index_val):
+        # Jump directly to the frame at index 'i' (generator obj sucks!)
+        video_capture.set(cv2.CAP_PROP_POS_FRAMES, i)
+        ret, frame = video_capture.read()
+        if not ret:
+            break
+        captured_frames.append(frame)
+        progress_bar(i, total_frames)
+
+    progress_bar(total_frames, total_frames)
+    return captured_frames
+
+
 def frame_difference(frame1, frame2, threshold=50):
     frame1_gray = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
     frame2_gray = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
