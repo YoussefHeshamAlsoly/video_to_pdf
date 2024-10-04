@@ -7,9 +7,9 @@ ___
 
 The main idea of the project is to detect when frames change in a video (indicating change of slide/scene in that frame). Then it captures that frame and moves on to the next frame, and keeps capturing those frames until it makes a library of -what could be- the slides presented in the video.
 
-The project uses 4 comparison techniques of analyzing the frames to determine change of scenes or not, those techniques are:
+Other than the fixed-interval extraction method, the project uses 4 comparison techniques of analyzing the frames to determine change of scenes or not, those techniques are:
 
-1. Fixed-interval slicing (not a comparison method, rather saving frames with a fixed interval between every consecutive frames)
+1. Fixed-interval extraction (not a comparison method, rather saving frames with a fixed interval between every consecutive frames)
 2. Pixel-wise comparison
 3. Histogram comparison
 4. SSIM comparison
