@@ -19,8 +19,17 @@ ___
 
 ## Usage
 
+First, install the required packages in the `requirements.txt` file using the following command
+
+```cmd
+python3 pip install -r requirements.txt
+```
+
 This is a CLI project, it needs an input file, choosing a comparison method, and choosing the comparison method's threshold.
-`python3 main.py --input <path/to/the/input/video> --method <choose one of the 4 methods> --threshold <choose threshold>`
+
+```cmd
+python3 main.py --input <path/to/the/input/video> --method <choose one of the 4 methods> --threshold <choose threshold>
+```
 
 The methods are:
 
@@ -35,11 +44,18 @@ Use the `--help` command to find more about the thresholds and more details abou
 
 ## Examples
 
-`python3 main.py --input test.mp4 --method pixel-wise --threshold 10`
+```cmd
+python3 main.py --input test.mp4 --method pixel-wise --threshold 10
+```
 
-`python3 main.py -i test.mp4 -m orb -t 25`
+```cmd
+python3 main.py -i test.mp4 -m orb -t 25
+```
 
-`python3 main.py --help`
+```cmd
+python3 main.py --help
+```
+
 ___
 
 ## Output
