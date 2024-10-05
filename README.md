@@ -60,6 +60,6 @@ ___
 
 - [x] Better memory handling (capture/release mechanism).
 - [x] Add a method to extract frames with fixed interval (e.g. a frame every 2000 ms).
-- [ ] Let the user pick where to save the output folder and pdf.
+- [x] Let the user pick where to save the output folder and pdf.
 - [ ] Implement yt-dl library in the project (to work with online videos).
 - [ ] Create a GUI for the project.
