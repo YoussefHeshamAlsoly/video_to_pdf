@@ -43,7 +43,12 @@ from comparison_functions import (
 
 def main(input, output, method, threshold):
     video_path = input
-    output_path = output
+    
+    if output == None:
+        output_path = os.path.dirname(input)
+    else:
+        output_path = output
+    
     threshold = float(threshold)
 
     methods = {

@@ -3,7 +3,7 @@ import datetime
 import cv2
 from PIL import Image
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+# from reportlab.lib.pagesizes import letter
 from util.progress_bar import progress_bar
 import threading
 
@@ -17,7 +17,7 @@ def save_frames_as_images(method, frames, output_path):
     
     # Folder to store frames (for manual processing/backup if needed)
     # if output_path == None:
-    if output_path != None and os.path.exists(output_path) and os.path.isdir(output_path):
+    if os.path.exists(output_path) and os.path.isdir(output_path):
         original_frames_folder = f"Extracted_Frames_{method}_{current_time}"
         original_frames_folder = os.path.join(output_path, original_frames_folder)
     else:
@@ -65,7 +65,7 @@ def combine_images_to_pdf(method, image_paths, output_path, current_time):
         return
 
     # if output_path == None:
-    if output_path != None and os.path.exists(output_path) and os.path.isdir(output_path):
+    if os.path.exists(output_path) and os.path.isdir(output_path):
         pdf_path = f"output_frames_{method}_{current_time}.pdf"
         pdf_path = os.path.join(output_path, pdf_path)
     else:
