@@ -18,6 +18,12 @@ from comparison_functions import (
                 '--input',
                 help='Input video path')
 
+@click.option('-o',
+                '--output',
+                default=None,
+                help='Output path for the resulting PDF and frames folder\
+                    \nDefault output path will be the same path as the input video')
+
 @click.option('-m',
                 '--method',
                 type=click.Choice(['fixed-interval','pixel-wise', 'hist', 'ssim', 'mse', 'orb'], case_sensitive=False),
@@ -35,8 +41,9 @@ from comparison_functions import (
                     \n\nmse (float): Range (0 to 1) 0 indicates no similarity and 1 indicates identical frames. Adjust based on your observations.\
                     \n\norb (int): Adjust based on the desired number of match points.')
 
-def main(input, method, threshold):
+def main(input, output, method, threshold):
     video_path = input
+    output_path = output
     threshold = float(threshold)
 
     methods = {
@@ -50,7 +57,7 @@ def main(input, method, threshold):
 
     comparison_method, method_name = methods[method.lower()]
     print(f"Using {method_name} method to compare frames with a threshold of {threshold}.")
-    process_video(method, video_path, comparison_method, threshold)
+    process_video(method, video_path, output_path, comparison_method, threshold)
 
 
 def frame_generator(video_path):
@@ -63,11 +70,7 @@ def frame_generator(video_path):
     cap.release()
 
 
-def process_frame():
-    pass
-
-
-def process_video(method, video_path, comparison_method, threshold):
+def process_video(method, video_path, output_path, comparison_method, threshold):
     cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)  # Frames per second
     
@@ -150,8 +153,8 @@ def process_video(method, video_path, comparison_method, threshold):
     print(f"Detected {len(different_frames)} different frames.")
 
 
-    images, currrent_time = save_frames_as_images(method, different_frames)
-    combine_images_to_pdf(method, images, currrent_time)
+    images, currrent_time = save_frames_as_images(method, different_frames, output_path)
+    combine_images_to_pdf(method, images, output_path, currrent_time)
 
 
 # Run the main function
