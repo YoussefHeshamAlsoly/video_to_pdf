@@ -37,7 +37,7 @@ python3 setup.py
 This is a CLI project, it needs an input file, choosing a comparison method, and choosing the comparison method's threshold.
 
 ```cmd
-python3 main.py --input <path/to/the/input/video> --method <choose one of the 4 methods> --threshold <choose threshold>
+python3 main.py --input <path/to/the/input/video> --method <choose one of the 4 methods> --threshold <choose threshold> --output <directory to save all the generated output data>
 ```
 
 The methods are:
