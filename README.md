@@ -22,8 +22,17 @@ ___
 First, install the required packages in the `requirements.txt` file using the following command
 
 ```cmd
-python3 pip install -r requirements.txt
+python3 setup.py
 ```
+
+### Input options
+
+| Option                | Description                                                                                                                                                            |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-i` or `-- input`    | Input video path. Could be local video<br>or online video (check [yt-dl supported sites list](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md))         |
+| `-m` or `--method`    | Frame extraction/comparison methods<br>(default method is `fixed-interval`)                                                                                            |
+| `-t` or `--threshold` | Threshold of the number of seconds/pixels to<br>do extraction/comparison on                                                                                            |
+| `-o` or `--output`    | Path to a directory to save all the generated files/directories<br>(optional, if not provided, the script will save all the data<br>in the current directory it is in) |
 
 This is a CLI project, it needs an input file, choosing a comparison method, and choosing the comparison method's threshold.
 
@@ -45,7 +54,7 @@ Use the `--help` command to find more about the thresholds and more details abou
 ## Examples
 
 ```cmd
-python3 main.py --input test.mp4 --method pixel-wise --threshold 10
+python3 main.py --input test.mp4 --method fixed-interval --threshold 10 --output "C:\Users\SomeUser\Desktop\"
 ```
 
 ```cmd
@@ -77,5 +86,5 @@ ___
 - [x] Better memory handling (capture/release mechanism).
 - [x] Add a method to extract frames with fixed interval (e.g. a frame every 2000 ms).
 - [x] Let the user pick where to save the output folder and pdf.
-- [ ] Implement yt-dl library in the project (to work with online videos).
-- [ ] Create a GUI for the project.
+- [x] Implement yt-dl library in the project (to work with online videos).
+- [ ] (not planned soon) Restucture the whole thing. Make it cleaner, instead of code vomitting everywhere.

@@ -1,5 +1,8 @@
+import sys
 import cv2
 import click
+import setup
+from util import ytdl_helper
 from frames_to_pdf import *
 from util.progress_bar import progress_bar
 
@@ -42,13 +45,28 @@ from comparison_functions import (
                     \n\norb (int): Adjust based on the desired number of match points.')
 
 def main(input, output, method, threshold):
-    video_path = input
-    
+    libs = setup.install_req()
+    if libs:
+        pass
+    else:
+        sys.exit(1)
+
     if output == None:
         output_path = os.path.dirname(input)
     else:
+        if os.path.exists(output) and os.path.isdir(output):
+            pass
+        else:
+            os.makedirs(output)
         output_path = output
     
+    if os.path.exists(input) and os.path.isfile(input):
+        video_path = input
+    else:
+        video_info = ytdl_helper.download_driver(input, output_path)
+        if video_info:
+            video_path = video_info['path']
+
     threshold = float(threshold)
 
     methods = {
