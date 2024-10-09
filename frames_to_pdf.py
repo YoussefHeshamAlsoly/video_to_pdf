@@ -3,7 +3,6 @@ import datetime
 import cv2
 from PIL import Image
 from reportlab.pdfgen import canvas
-# from reportlab.lib.pagesizes import letter
 from util.progress_bar import progress_bar
 import threading
 

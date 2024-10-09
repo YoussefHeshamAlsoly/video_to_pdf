@@ -4,7 +4,6 @@ from skimage.metrics import structural_similarity as ssim
 from util.progress_bar import progress_bar
 
 
-# Define comparison methods
 def fixed_interval(video_capture, fps, interval, total_frames):
     capture_index_val = int(fps * interval)
     captured_frames = []
