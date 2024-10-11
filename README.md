@@ -1,6 +1,6 @@
 # video_to_pdf
 
-![Banner](.assets/banner.jpg)
+![Banner](./assets/Banner.jpg)
 
 A CLI project dedicated to converting videos to pdf format for ease of access.
 ___
